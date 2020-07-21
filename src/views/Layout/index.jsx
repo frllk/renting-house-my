@@ -5,26 +5,79 @@ import HouseList from '../HouseList'
 import News from '../News'
 import My from '../My'
 import NotFound from '../404'
+import Styles from './index.module.scss'
+import { TabBar } from 'antd-mobile';
 
 class Login extends Component {
+  constructor(props) {
+    super()
+    this.state = {
+      selectPath: localStorage.getItem('currRoute') || '/layout/home'
+    }
+  }
+  // tabs数组
+  TABS = [
+    {
+      title: '首页',
+      icon: 'icon-index',
+      path: '/layout/home'
+    },
+    {
+      title: '找房',
+      icon: 'icon-findHouse',
+      path: '/layout/houselist'
+    },
+    {
+      title: '资讯',
+      icon: 'icon-info',
+      path: '/layout/news'
+    },
+    {
+      title: '我的',
+      icon: 'icon-my',
+      path: '/layout/my'
+    }
+  ]
+  renderTabBar = () => {
+    const { push } = this.props.history
+    return (
+      <TabBar tintColor="#21B97A" noRenderContent={true}>
+        {
+          this.TABS.map(item => {
+            return <TabBar.Item
+              title={item.title}
+              key={item.path}
+              icon={<i className={`iconfont ${item.icon}`} />}
+              selectedIcon={<i className={`iconfont ${item.icon}`} />}
+              selected={this.state.selectPath === item.path}
+              onPress={() => {
+                this.setState({
+                  selectPath: item.path,
+                });
+                push({ pathname: item.path })
+                localStorage.setItem('currRoute', item.path)
+              }}
+            />
+          })
+        }
+      </TabBar>
+    )
+  }
   render () {
-    return <div>
+    return <div className={Styles.layout}>
       {/* 路由配置的地方 */}
-      <Switch>
-        <Route path='/layout/home' component={Home} />
-        <Route path='/layout/houseList' component={HouseList} />
-        <Route path='/layout/news' component={News} />
-        <Route path='/layout/my' component={My} />
-        <Redirect from='/layout' to='/layout/home' exact component={Home} />
-        <Route component={NotFound} />
-      </Switch>
-      {/* TabBar */}
-      <div style={{ position: 'fixed', height: '50px', left: 0, right: 0, bottom: 0 }}>
-        <Link to='/layout/home'>首页</Link>&nbsp;
-        <Link to='/layout/houseList'>找房</Link>&nbsp;
-        <Link to='/layout/news'>咨询</Link>&nbsp;
-        <Link to='/layout/my'>我的</Link>&nbsp;
+      <div>
+        <Switch>
+          <Route path='/layout/home' component={Home} />
+          <Route path='/layout/houseList' component={HouseList} />
+          <Route path='/layout/news' component={News} />
+          <Route path='/layout/my' component={My} />
+          <Redirect from='/layout' to='/layout/home' exact component={Home} />
+          <Route component={NotFound} />
+        </Switch>
       </div>
+      {/* TabBar */}
+      <div className={Styles.tabbar}>{this.renderTabBar()}</div>
     </div>
   }
 }
