@@ -54,10 +54,11 @@ export default class Home extends Component {
     )
   }
   render () {
+    const { swiper } = this.state
     return (
       <div className={Styles.root}>
         {/* 轮播图 */}
-        <div className={Styles.swiper}>{this.renderSwiper()}</div>
+        <div className={Styles.swiper}>{swiper && this.renderSwiper()}</div>
       </div>
     )
   }
