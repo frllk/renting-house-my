@@ -10,9 +10,10 @@ import { TabBar } from 'antd-mobile';
 
 class Login extends Component {
   constructor(props) {
-    super()
+    super(props)
     this.state = {
-      selectPath: localStorage.getItem('currRoute') || '/layout/home'
+      // selectPath: localStorage.getItem('currRoute') || '/layout/home'
+      selectPath: props.location.pathname
     }
   }
   // tabs数组
@@ -54,8 +55,9 @@ class Login extends Component {
                 this.setState({
                   selectPath: item.path,
                 });
-                push({ pathname: item.path })
-                localStorage.setItem('currRoute', item.path)
+                if (this.state.selectPath !== item.path)
+                  push({ pathname: item.path })
+                // localStorage.setItem('currRoute', item.path)
               }}
             />
           })
