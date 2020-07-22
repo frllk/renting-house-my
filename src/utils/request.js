@@ -4,7 +4,7 @@
 import axios from 'axios'
 
 const instance = axios.create({
-  baseUrl: process.REACT_APP_BASHURL,
+  baseURL: process.env.REACT_APP_BASHURL,
   timeout: 6000
 })
 export default instance
