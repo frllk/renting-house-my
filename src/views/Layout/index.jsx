@@ -16,6 +16,21 @@ class Login extends Component {
       selectPath: props.location.pathname
     }
   }
+
+  // 当Layout组件的props发生了改变，就会执行
+  // componentWillReceiveProps (props) {
+  //   console.log(props)
+  //   this.setState({
+  //     selectPath: props.location.pathname
+  //   })
+  // }
+
+  static getDerivedStateFromProps (props, state) {
+    return {
+      selectPath: props.location.pathname
+    }
+  }
+
   // tabs数组
   TABS = [
     {
@@ -71,7 +86,7 @@ class Login extends Component {
       <div>
         <Switch>
           <Route path='/layout/home' component={Home} />
-          <Route path='/layout/houseList' component={HouseList} />
+          <Route path='/layout/houselist' component={HouseList} />
           <Route path='/layout/news' component={News} />
           <Route path='/layout/my' component={My} />
           <Redirect from='/layout' to='/layout/home' exact component={Home} />
