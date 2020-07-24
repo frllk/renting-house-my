@@ -26,6 +26,7 @@ class Login extends Component {
   // }
 
   static getDerivedStateFromProps (props, state) {
+    // 返回的对象，会覆盖state中模型的值
     return {
       selectPath: props.location.pathname
     }

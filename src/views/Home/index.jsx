@@ -3,11 +3,15 @@ import styles from './index.module.scss'
 import { getSwiper, getGroups, getNews } from '../../api/home'
 import { Carousel, Flex, Grid, WingBlank } from 'antd-mobile';
 
+
 // 以模块的方式，加载本地图片
 import image1 from '../../assets/images/nav-1.png'
 import image2 from '../../assets/images/nav-2.png'
 import image3 from '../../assets/images/nav-3.png'
 import image4 from '../../assets/images/nav-4.png'
+
+// 引入SearchBar子组件
+import SearchBar from '../../components/SearchBar';
 
 export default class Home extends Component {
 
@@ -17,7 +21,8 @@ export default class Home extends Component {
       swiper: [],
       imgHeight: 212,  // 轮播图中图片的高度
       groups: null, // 租房小组
-      news: null // 最新咨询
+      news: null, // 最新咨询
+      cityName: '深圳' // 定位的城市名
     }
   }
   // 创建时钩子函数
@@ -153,9 +158,11 @@ export default class Home extends Component {
     )
   }
   render () {
-    const { swiper, groups, news } = this.state
+    const { swiper, groups, news, cityName } = this.state
     return (
       <div className={styles.root}>
+        {/* 搜索条: 直接导入进行渲染的，不是通过路由方式渲染出来的，所以没有三个对象（history，location，match） */}
+        <SearchBar cityName={cityName} />
         {/* 轮播图 */}
         {swiper && this.renderSwiper()}
         {/* 渲染NAV */}
