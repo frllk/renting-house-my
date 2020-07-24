@@ -12,9 +12,7 @@ function MyNavBar ({ children, history }) {
         console.log(1);
         history.goBack()
       }}
-      rightContent={() => {
-
-      }}
+      rightContent={[]}
     >{children}</NavBar>
   )
 }
