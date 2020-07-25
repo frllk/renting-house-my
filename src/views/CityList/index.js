@@ -6,7 +6,11 @@ import styles from './index.module.scss'
 import MyNavBar from '../../components/MyNavBar'
 import { getCityList, getHotCityList } from '../../api/city'
 import { getCurrentCity } from '../../utils/city'
-import { Grid } from 'antd-mobile'
+import { AutoSizer, List } from 'react-virtualized';
+
+
+const TITLE_HEIGHT = 36
+const CITY_HEIGHT = 50
 
 export default class CityList extends Component {
 
@@ -57,32 +61,56 @@ export default class CityList extends Component {
     })
   }
 
-  renderCity = () => {
+  renderCity = (
+    {
+      key, // Unique key within array of rows
+      index, // Index of row within collection
+      isScrolling, // The List is currently being scrolled
+      isVisible, // This row is visible within the List (eg it is not an overscanned row)
+      style, // Style object to be applied to row (to position it)
+    }
+  ) => {
+    console.log(style)
     return (
-      //   <Grid data={this.state.cityListObj}
-      //   square={false}
-      //   columnNum={1}
-      //   renderItem={item => (
-      //     <div key={item.value} style={{ padding: '12.5px' }}>
-      //       <span>{item.label}</span>
-      //     </div>
-      //   )}
-      // />
-      <div>
-        aaa
+      <div key={key} style={style}>
+        1111---{index}
       </div>
     )
   }
 
-  render () {
+  calRowHeight = ({ index }) => {
     const { cityListObj, cityListIndex } = this.state
+    const letter = cityListIndex[index]
+    const list = cityListObj[letter]
+    const length = list ? list.length : 1
+    return TITLE_HEIGHT + length * CITY_HEIGHT
+  }
+
+  render () {
+    const { cityListIndex } = this.state
+    console.log(cityListIndex)
     return (
-      <div>
+      <div className={styles.citylist}>
         {/* 这么传会增加父子组件的耦合程度 */}
         {/* <MyNavBar history={this.props.history}>城市选择</MyNavBar> */}
         <MyNavBar>城市选择</MyNavBar>
         {/* 城市列表 */}
-        {this.renderCity()}
+        {
+          cityListIndex && (<AutoSizer>
+            {
+              ({ height, width }) => {
+                return <List
+                  // style={{ backgroundColor: 'red' }}
+                  width={width}
+                  height={height - 45}
+                  rowCount={20}
+                  rowHeight={() => this.calRowHeight(cityListIndex.length)}
+                  rowRenderer={this.renderCity}
+                />
+              }
+            }
+          </AutoSizer>)
+        }
       </div>
     )
   }

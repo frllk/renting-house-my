@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App'; // 根组件 Vue: App.vue
 import * as serviceWorker from './serviceWorker';
+import 'react-virtualized/styles.css'; // 导入虚拟化长列表的样式
 
 ReactDOM.render(
   // <React.StrictMode>

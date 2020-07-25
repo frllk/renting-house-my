@@ -31,8 +31,8 @@ export const getCurrentCity = () => {
         const { data } = await getCityInfo(result.name)
         // console.log('=========', result, data)
         // 3.把它保存到本地 & 通过resolve返回给调用者
+        setLocalCity(data.body)
         resolve(data.body)
-        reject()
       });
     })
   }
