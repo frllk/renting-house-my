@@ -12,6 +12,7 @@ import image4 from '../../assets/images/nav-4.png'
 
 // 引入SearchBar子组件
 import SearchBar from '../../components/SearchBar';
+import { getCurrentCity } from '../../utils/city';
 
 export default class Home extends Component {
 
@@ -26,9 +27,17 @@ export default class Home extends Component {
     }
   }
   // 创建时钩子函数
-  componentDidMount () {
+  async componentDidMount () {
+    const { label } = await getCurrentCity()
+    this.setState({
+      cityName: label
+    })
+
+    // 获取轮播图数据
     this.getSwiperData()
+    // 获取租房小组的数据
     this.getGroups()
+    // 获取最新资讯的数据
     this.getNews()
   }
   /**
