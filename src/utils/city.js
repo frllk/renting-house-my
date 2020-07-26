@@ -3,10 +3,10 @@
  */
 import { getCityInfo } from '../api/city'
 const STORAGE_CITYKEY = 'current_city'
-const setLocalCity = city => {
+export const setLocalCity = city => {
   window.localStorage.setItem(STORAGE_CITYKEY, JSON.stringify(city))
 }
-const getLocalCity = () => window.localStorage.getItem(STORAGE_CITYKEY)
+export const getLocalCity = () => window.localStorage.getItem(STORAGE_CITYKEY)
 export const getCurrentCity = () => {
   // 从需求处分析：没有思路的时候，看调用的时候需要什么东西，然后考虑这边需要返回什么信息
   // 这里面无论如何处理，最终都要返回一个promise，并且最终Promise resolve出去的就是一个城市对象
