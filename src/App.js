@@ -7,6 +7,7 @@ import Layout from './views/Layout'
 import Login from './views/Login'
 import NotFound from './views/404'
 import CityList from './views/CityList'
+import Map from './views/Map'
 
 function App () {
   return (
@@ -16,6 +17,7 @@ function App () {
           <Route path='/login' component={Login} />
           <Route path='/layout' component={Layout} />
           <Route path='/citylist' component={CityList} />
+          <Route path='/map' component={Map} />
           <Redirect from='/' to='/layout' exact component={Layout} />
           <Route component={NotFound} />
         </Switch>
