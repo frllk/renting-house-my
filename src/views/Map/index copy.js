@@ -19,17 +19,17 @@ const labelStype = {
 }
 
 export default class index extends Component {
-  componentDidMount () {
-    this.initMap()
-  }
   initMap = async () => {
+    console.log('initMap'); // sys-log
+
     // 避免地图还没加载完成的情况
     if (!BMap) return
 
     const { label, value } = await getCurrentCity()
-    //  创建地图实例 
-    // var map 是局部变量，只能在initMap里面用===>创建的内容赋值给实例属性，后面就可以直接通过实例属性map添加覆盖物
+    //  创建地图实例
     this.map = new BMap.Map('container')
+
+    console.log('this.map', this.map); // sys-log
 
     // 创建地址解析器实例
     var myGeo = new BMap.Geocoder()
@@ -55,23 +55,23 @@ export default class index extends Component {
     Toast.loading('数据加载中......', 0)
     const { data } = await getOverlaysById(id)
     Toast.hide()
-    // console.log('overlays', data); // sys-log
+    console.log('overlays', data); // sys-log
     data.body.forEach(item => this.renderCicleOverlay(item))
   }
 
   // 添加一级覆盖物的方法
   renderCicleOverlay = ({ coord: { longitude, latitude }, count, label: name, value: id }) => {
     // console.log('renderCicleoverlay', longitude, latitude, count, name, id); // sys-log
-    // 设置覆盖物的经纬度，前面是经度，后面是纬度
+    // 设置覆盖物
     const point = new BMap.Point(longitude, latitude);
     // 创建选项：设置文本偏移量
     var opts = {
       position: point,    // 指定文本标注所在的地理位置
       offset: new BMap.Size(-35, -35)    //设置文本偏移量
     }
-    let label = new BMap.Label('', opts) // 创建文本标注对象
+    let label = new BMap.label('', opts)
 
-    label.setContent(`<div class=${styles.bubble}><p class=${styles.name}>${name}</p><p class=${styles.name}>${count}套</p></div>`)
+    label.setContent(`<div style="text-aligh:center;font-size:6px"><p>${name}</p><p>${count}套</p></div>`)
     // 创建文本标注对象
     label.setStyle(labelStype);
 

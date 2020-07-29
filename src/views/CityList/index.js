@@ -131,6 +131,7 @@ export default class CityList extends Component {
     // this.setState({
     //   selectedIndex: index
     // })
+    // ref:拿到组件的实例 this.listRef.current
     this.listRef.current.scrollToRow(index)
   }
   listRef = React.createRef()
