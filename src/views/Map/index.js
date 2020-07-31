@@ -48,6 +48,23 @@ export default class index extends Component {
     )
   }
 
+  // 获取要渲染的覆盖物的类型（'circle','react'）
+  // nextZoom: 代表点击之后要放大的级别
+  getRenderOverlayTypeAndNextZoom = () => {
+    const currentZoom = this.map.getZoom()
+    let type = 'circle'
+    let nextZoom = 13
+    if (currentZoom > 10 && currentZoom < 12) {
+      type = 'circle'
+      nextZoom = 13
+    } else if (currentZoom > 12 && currentZoom < 14) {
+      type = 'circle'
+      nextZoom = 15
+    } else if (currentZoom > 14) {
+      type = 'rect'
+    }
+    return { type, nextZoom }
+  }
 
   // 渲染各级覆盖物的方法
   renderOberlays = async (id) => {
@@ -56,11 +73,22 @@ export default class index extends Component {
     const { data } = await getOverlaysById(id)
     Toast.hide()
     // console.log('overlays', data); // sys-log
-    data.body.forEach(item => this.renderCicleOverlay(item))
+
+    const { type, nextZoom } = this.getRenderOverlayTypeAndNextZoom()
+    console.log(type, nextZoom);
+    // 根据当前缩放的级别，判断下一级地图缩放级别
+    data.body.forEach(item => {
+      if (type === 'circle') {
+        this.renderCicleOverlay(item, nextZoom)
+      } else {
+        this.renderReactOverlay(item)
+      }
+    })
   }
 
-  // 添加一级覆盖物的方法
-  renderCicleOverlay = ({ coord: { longitude, latitude }, count, label: name, value: id }) => {
+
+  // 添加一二级覆盖物的方法
+  renderCicleOverlay = ({ coord: { longitude, latitude }, count, label: name, value: id }, nextZoom) => {
     // console.log('renderCicleoverlay', longitude, latitude, count, name, id); // sys-log
     // 设置覆盖物的经纬度，前面是经度，后面是纬度
     const point = new BMap.Point(longitude, latitude);
@@ -72,12 +100,39 @@ export default class index extends Component {
     let label = new BMap.Label('', opts) // 创建文本标注对象
 
     label.setContent(`<div class=${styles.bubble}><p class=${styles.name}>${name}</p><p class=${styles.name}>${count}套</p></div>`)
-    // 创建文本标注对象
     label.setStyle(labelStype);
+
+    label.addEventListener('click', () => {
+      // console.log('click', name);
+      // 清除掉现在已有的覆盖物
+      setTimeout(() => {
+        this.map.clearOverlays()
+      }, 0);
+      // 更改地图的中心点和缩放级别
+      this.map.centerAndZoom(point, nextZoom)
+      // 调用renderOberlays，去加载点击覆盖物下面的二级覆盖物
+      this.renderOberlays(id)
+    })
+
 
     // 把覆盖物放在地图上
     this.map.addOverlay(label);
   }
+  // 渲染三级覆盖物
+  renderReactOverlay = ({ coord: { longitude, latitude }, count, label: name, value: id }) => {
+    var point = new BMap.Point(longitude, latitude);
+    var opts = {
+      position: point,    // 指定文本标注所在的地理位置
+      offset: new BMap.Size(-50, -20)    //设置文本偏移量
+    }
+    var label = new BMap.Label("", opts);  // 创建文本标注对象
+    label.setContent(`
+    <div class=${styles.rect}><span class=${styles.housename}>${name}</span><span class=${styles.housenum}>${count}套</span></div>
+    `)
+    label.setStyle(labelStype);
+    this.map.addOverlay(label);
+  }
+
   render () {
     return (
       <div className={styles.map}>
