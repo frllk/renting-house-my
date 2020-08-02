@@ -2,17 +2,18 @@ import React from 'react'
 import styles from './index.module.scss'
 import { NavBar } from 'antd-mobile'
 import { withRouter } from 'react-router-dom'
+import classNames from 'classnames'
 
-function MyNavBar ({ children, history }) {
+function MyNavBar ({ children, rightContent, className, history }) {
   return (
     <NavBar
-      className={styles.navBar}
+      className={classNames(styles.navBar, className)}
       icon={<i className="iconfont icon-back"></i>}
       onLeftClick={() => {
         console.log(1);
         history.goBack()
       }}
-      rightContent={[]}
+      rightContent={rightContent}
     >{children}</NavBar>
   )
 }
