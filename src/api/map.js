@@ -13,3 +13,13 @@ export const getOverlaysById = aredId => {
     url: `/area/map?id=${aredId}`
   })
 }
+
+/**
+ * 根据id获取房源列表数据 
+ * @param {*} id 
+ */
+export const getHouseList = id => {
+  return request({
+    url: `/houses?cityId=${id}`
+  })
+}

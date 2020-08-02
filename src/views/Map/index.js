@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 import styles from './index.module.scss'
 import MyNavBar from '../../components/MyNavBar'
 import { getCurrentCity } from '../../utils/city'
-import { getOverlaysById } from '../../api/map'
+import { getOverlaysById, getHouseList } from '../../api/map'
 import { Toast } from 'antd-mobile'
+import classNames from 'classnames'
+import HouseItem from '../../components/HouseItem'
 
 const BMap = window.BMap
 const labelStype = {
@@ -18,7 +20,14 @@ const labelStype = {
   fontFamily: "微软雅黑"
 }
 
-export default class index extends Component {
+export default class Map extends Component {
+  constructor() {
+    super()
+    this.state = {
+      houseList: null, // 房屋列表
+      isShow: false  // 是否需要渲染
+    }
+  }
   componentDidMount () {
     this.initMap()
   }
@@ -30,6 +39,11 @@ export default class index extends Component {
     //  创建地图实例 
     // var map 是局部变量，只能在initMap里面用===>创建的内容赋值给实例属性，后面就可以直接通过实例属性map添加覆盖物
     this.map = new BMap.Map('container')
+    this.map.addEventListener('touchstart', () => {
+      this.setState({
+        isShow: false
+      })
+    })
 
     // 创建地址解析器实例
     var myGeo = new BMap.Geocoder()
@@ -86,7 +100,6 @@ export default class index extends Component {
     })
   }
 
-
   // 添加一二级覆盖物的方法
   renderCicleOverlay = ({ coord: { longitude, latitude }, count, label: name, value: id }, nextZoom) => {
     // console.log('renderCicleoverlay', longitude, latitude, count, name, id); // sys-log
@@ -127,17 +140,63 @@ export default class index extends Component {
     }
     var label = new BMap.Label("", opts);  // 创建文本标注对象
     label.setContent(`
-    <div class=${styles.rect}><span class=${styles.housename}>${name}</span><span class=${styles.housenum}>${count}套</span></div>
+      <div class=${styles.rect}>
+        <span class=${styles.housename}>${name}</span>
+        <span class=${styles.housenum}>${count}套</span>
+      </div>
     `)
     label.setStyle(labelStype);
+    label.addEventListener('click', e => {
+      // console.log('e', e); // sys-log
+      // 没有点击到
+      if (!e.changedTouches || !e.changedTouches[0]) return
+      const { clientX, clientY } = e.changedTouches[0]
+      const moveX = window.screen.width / 2 - clientX
+      // 330: 遮罩
+      const moveY = window.screen.height / 2 - clientY - 330 / 2
+      this.map.panBy(moveX, moveY)
+      // 调用方法获取点击的覆盖物的房源列表数据
+      this.getHouseListData(id)
+
+    })
     this.map.addOverlay(label);
   }
 
+  // 房屋列表
+  getHouseListData = async (id) => {
+    const { data } = await getHouseList(id)
+    console.log('list', data.body); // sys-log
+    this.setState({
+      houseList: data.body.list,
+      isShow: true
+    })
+  }
+
+  // 渲染房屋列表
+  renderHouseList = () => {
+    const { isShow, houseList } = this.state
+    console.log('isShow', isShow); // sys-log
+    // [styles.show]：属性名表达式
+    return <div className={classNames(styles.houseList, { [styles.show]: isShow })}>
+      <div className={styles.titleWrap}>
+        <h1 className={styles.listTitle}>房屋列表</h1>
+        <a href="/houselist" className={styles.titleMore}>更多房屋</a>
+      </div>
+      <div className={styles.houseItems}>
+        {
+          houseList.map(item => <HouseItem key={item.houseCode} {...item} />)
+        }
+      </div>
+    </div>
+  }
+
   render () {
+    const { houseList } = this.state
     return (
       <div className={styles.map}>
         <MyNavBar>地图找房</MyNavBar>
         <div id='container'></div>
+        {houseList && this.renderHouseList()}
       </div>
     )
   }
