@@ -1,9 +1,10 @@
 import React from 'react'
 import styles from './index.module.scss'
 import classNames from 'classnames'
+import { withRouter } from 'react-router-dom'
 
-function HouseItem ({ houseCode, houseImg, title, desc, tags, price }) {
-  return <div className={styles.house}>
+function HouseItem ({ houseCode, houseImg, title, desc, tags, price, history }) {
+  return <div className={styles.house} onClick={() => history.push(`/detail/${houseCode}`)}>
     <div className={styles.imgWrap}>
       <img className={styles.img} src={`${process.env.REACT_APP_BASHURL}${houseImg}`} alt={title} />
     </div>
@@ -21,4 +22,4 @@ function HouseItem ({ houseCode, houseImg, title, desc, tags, price }) {
   </div>
 }
 
-export default HouseItem
+export default withRouter(HouseItem)

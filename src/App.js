@@ -8,6 +8,7 @@ import Login from './views/Login'
 import NotFound from './views/404'
 import CityList from './views/CityList'
 import Map from './views/Map'
+import Detail from './views/Detail'
 
 function App () {
   return (
@@ -18,6 +19,8 @@ function App () {
           <Route path='/layout' component={Layout} />
           <Route path='/citylist' component={CityList} />
           <Route path='/map' component={Map} />
+          {/* :id ===> vue中叫：动态路径参数 */}
+          <Route path='/Detail/:id' component={Detail} />
           <Redirect from='/' to='/layout' exact component={Layout} />
           <Route component={NotFound} />
         </Switch>
