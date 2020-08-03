@@ -1,14 +1,12 @@
 /**
  * 赛选:过滤组件
  */
-
-
-
 import React, { Component } from 'react'
 import styles from './index.module.scss'
-import { Flex } from 'antd-mobile'
+import { Flex, PickerView } from 'antd-mobile'
 import classNames from 'classnames'
-
+import { getHouseCondition } from '../../api/filter'
+import { getCurrentCity } from '../../utils/city'
 
 
 export default class Filter extends Component {
@@ -24,6 +22,7 @@ export default class Filter extends Component {
       },
       // 点击或是打开的类型
       openType: '',
+      houseCondition: null // 房屋筛选条件
     }
   }
   types = [
@@ -45,12 +44,24 @@ export default class Filter extends Component {
     }
   ]
 
+  componentDidMount () {
+    this.getHouseConditionData()
+  }
+
+  getHouseConditionData = async () => {
+    const { value } = await getCurrentCity()
+    const { data } = await getHouseCondition(value)
+    this.setState({
+      houseCondition: data.body
+    })
+  }
   // 渲染类型标题部分
   renderTypeTitle = () => {
     const { selectedTypeTitle } = this.state
     return <Flex className={styles.filterTitle}>
       {
         this.types.map(item => {
+          // 决定遍历到的item这一项是否高亮显示
           const isSelect = selectedTypeTitle[item.type]
           return <Flex.Item key={item.type}>
             <span
@@ -76,6 +87,7 @@ export default class Filter extends Component {
     })
   }
 
+  // 取消遮罩
   cancelMask = () => {
     this.setState({
       selectedTypeTitle: {
@@ -96,11 +108,47 @@ export default class Filter extends Component {
     return <div onClick={this.cancelMask} className={styles.mask}></div>
   }
 
+  // 渲染PickerView
+  renderPickerView = () => {
+    const { openType, houseCondition: { area, subway, rentType, price } } = this.state
+    let data = null
+    let cols = 3
+    switch (openType) {
+      case 'area':
+        data = [area, subway]
+        cols = 3
+        break;
+      case 'mode':
+        data = rentType
+        cols = 1
+      case 'price':
+        data = price
+        cols = 1
+      default:
+        break;
+    }
+
+    return <div>
+      <PickerView
+        data={data}
+        cols={cols}
+      />
+    </div>
+  }
+
   render () {
+    const { houseCondition, openType } = this.state
     return (
       <div className={styles.root}>
         {this.renderMsk()}
-        <div className={styles.content}>{this.renderTypeTitle()}</div>
+        <div className={styles.content}>
+          {/* 渲染标题 */}
+          {this.renderTypeTitle()}
+          {/* 渲染PickerView */}
+          {
+            houseCondition && (openType === 'area' || openType === 'price' || openType === 'mode') && this.renderPickerView()
+          }
+        </div>
       </div>
     )
   }
