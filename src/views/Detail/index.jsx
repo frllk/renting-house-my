@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import styles from './index.module.scss'
-import { Carousel, Flex } from 'antd-mobile'
+import { Carousel, Flex, Modal } from 'antd-mobile'
 import MyNavBar from '../../components/MyNavBar'
 import { getHouseInfo } from '../../api/detail'
 import classNames from 'classnames'
 import HouseMatch from '../../components/HouseMatch'
 import HouseItem from '../../components/HouseItem'
+import { getToken } from '../../utils/token'
 
 const BMap = window.BMap
 const labelStyle = {
@@ -290,7 +291,18 @@ export default class Detail extends Component {
       </Flex>
     )
   }
-
+  // 收藏&取消收藏
+  favoriteOrNot = () => {
+    // 1. 判断是否登录，如果没有登录，则提示，然后根据用户的选择进行处理
+    const token = getToken()
+    if (!token) {
+      Modal.alert('提示', '登录后才能收藏房源，是否去登录？', [
+        { text: '取消', onPress: () => null, style: 'default' },
+        { text: '去登录', onPress: () => this.props.history.push('/login') },
+      ]);
+      return
+    }
+  }
   render () {
     const { navTitle, houseInfo } = this.state
     return (
