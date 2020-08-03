@@ -9,12 +9,12 @@ const KEY = 'hkzf_token'
  * @param {*} token token
  */
 export const setToken = token => {
-  localStorage.setItem(KEY, JSON.stringify(token))
+  localStorage.setItem(KEY, token)
 }
 
 /**
  * 获取token
  */
 export const getToken = () => {
-  return JSON.parse(localStorage.getItem(KEY))
+  return localStorage.getItem(KEY)
 }

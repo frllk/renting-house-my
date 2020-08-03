@@ -5,7 +5,8 @@
 import React from 'react'
 import { Flex } from 'antd-mobile'
 import styles from './index.module.scss'
-import { Link, withRouter } from 'react-router-dom'
+// import { Link, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 function SearchBar ({ cityName, history }) {
   return (

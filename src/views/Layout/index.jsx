@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link, Route, Switch, Redirect } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import Home from '../Home'
 import HouseList from '../HouseList'
 import News from '../News'

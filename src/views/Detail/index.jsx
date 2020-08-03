@@ -277,6 +277,7 @@ export default class Detail extends Component {
                 ? 'http://huangjiangjun.top:8088/img/star.png'
                 : 'http://huangjiangjun.top:8088/img/unstar.png'
             }
+            alt=''
           />
           <span className={styles.favorite}>
             {isFavorite ? '已收藏' : '收藏'}

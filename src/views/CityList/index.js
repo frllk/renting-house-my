@@ -35,7 +35,15 @@ export default class CityList extends Component {
     let tempObj = {}
     let tempIndexList = []
 
-    data1.body.map(item => {
+    /* data1.body.map(item => {
+      const charFirst = item.short.substr(0, 1)
+      if (tempObj[charFirst]) {
+        tempObj[charFirst].push(item)
+      } else {
+        tempObj[charFirst] = [item]
+      }
+    }) */
+    data1.body.forEach(item => {
       const charFirst = item.short.substr(0, 1)
       if (tempObj[charFirst]) {
         tempObj[charFirst].push(item)
