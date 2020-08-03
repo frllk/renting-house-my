@@ -217,6 +217,40 @@ export default class Filter extends Component {
     </div>
   }
 
+  // 渲染MoreView
+  renderMoreView = () => {
+    // 户型、朝向、楼层、房屋亮点
+    const { houseCondition: { roomType, oriented, floor, characteristic } } = this.state
+    return (
+      <div className={styles.filterMore}>
+        <div className={styles.filterMoreMask} onClick={() => this.cancelMask()}></div>
+        <div className={styles.tags}>
+          <dl className={styles.dl}>
+            {this.renderEveryItem('户型', roomType)}
+            {this.renderEveryItem('朝向', oriented)}
+            {this.renderEveryItem('楼层', floor)}
+            {this.renderEveryItem('房屋亮点', characteristic)}
+          </dl>
+        </div>
+      </div>
+    )
+  }
+
+  // 渲染MoreView中每一项内容 => 户型、朝向、楼层、房屋亮点
+  renderEveryItem = (title, data) => {
+    return (
+      <>
+        <dt className={styles.dt}>{title}</dt>
+        <dd className={styles.dd}>
+          {
+            data.map(item => <span key={item.value} className={styles.tag}>{item.label}</span>)
+          }
+        </dd>
+
+      </>
+    )
+  }
+
   render () {
     const { houseCondition, openType } = this.state
     return (
@@ -228,6 +262,10 @@ export default class Filter extends Component {
           {/* 渲染PickerView */}
           {
             houseCondition && (openType === 'area' || openType === 'price' || openType === 'mode') && this.renderPickerView()
+          }
+          {/* 渲染右边的MoreView */}
+          {
+            houseCondition && openType === 'more' && this.renderMoreView()
           }
         </div>
       </div>
