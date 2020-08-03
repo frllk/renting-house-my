@@ -7,10 +7,12 @@ import { Flex } from 'antd-mobile'
 import styles from './index.module.scss'
 // import { Link, withRouter } from 'react-router-dom'
 import { withRouter } from 'react-router-dom'
+import classNames from 'classnames'
 
-function SearchBar ({ cityName, history }) {
+
+function SearchBar ({ cityName, history, className }) {
   return (
-    <Flex className={styles.root}>
+    <Flex className={classNames(styles.root, className)}>
       <Flex className={styles.searchLeft}>
         {/* <Link to='/citylist'> */}
         <div onClick={() => {
