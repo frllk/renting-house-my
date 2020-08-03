@@ -17,7 +17,7 @@ export default class Filter extends Component {
       // 标题选中，（决定是否高亮显示）
       selectedTypeTitle: {
         area: false,
-        mode: true,
+        mode: false,
         price: false,
         more: false
       },

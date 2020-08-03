@@ -84,16 +84,14 @@ class Login extends Component {
   render () {
     return <div className={Styles.layout}>
       {/* 路由配置的地方 */}
-      <div>
-        <Switch>
-          <Route path='/layout/home' component={Home} />
-          <Route path='/layout/houselist' component={HouseList} />
-          <Route path='/layout/news' component={News} />
-          <Route path='/layout/my' component={My} />
-          <Redirect from='/layout' to='/layout/home' exact component={Home} />
-          <Route component={NotFound} />
-        </Switch>
-      </div>
+      <Switch>
+        <Route path='/layout/home' component={Home} />
+        <Route path='/layout/houselist' component={HouseList} />
+        <Route path='/layout/news' component={News} />
+        <Route path='/layout/my' component={My} />
+        <Redirect from='/layout' to='/layout/home' exact component={Home} />
+        <Route component={NotFound} />
+      </Switch>
       {/* TabBar */}
       <div className={Styles.tabbar}>{this.renderTabBar()}</div>
     </div>

@@ -3,8 +3,8 @@ import styles from './index.module.scss'
 import classNames from 'classnames'
 import { withRouter } from 'react-router-dom'
 
-function HouseItem ({ houseCode, houseImg, title, desc, tags, price, history }) {
-  return <div className={styles.house} onClick={() => history.push(`/detail/${houseCode}`)}>
+function HouseItem ({ houseCode, houseImg, title, desc, tags, price, history, style }) {
+  return <div style={style} className={styles.house} onClick={() => history.push(`/detail/${houseCode}`)}>
     <div className={styles.imgWrap}>
       <img className={styles.img} src={`${process.env.REACT_APP_BASHURL}${houseImg}`} alt={title} />
     </div>
