@@ -7,7 +7,7 @@ import { Flex, PickerView } from 'antd-mobile'
 import classNames from 'classnames'
 import { getHouseCondition } from '../../api/filter'
 import { getCurrentCity } from '../../utils/city'
-
+import FilterFooter from '../FilterFooter'
 
 export default class Filter extends Component {
   constructor() {
@@ -133,6 +133,8 @@ export default class Filter extends Component {
         data={data}
         cols={cols}
       />
+      {/* 渲染底部 */}
+      <FilterFooter />
     </div>
   }
 
