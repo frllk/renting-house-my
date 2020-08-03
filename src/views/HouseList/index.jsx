@@ -5,8 +5,9 @@ import SearchBar from '../../components/SearchBar'
 import { getCurrentCity } from '../../utils/city'
 import Filter from '../../components/Filter'
 import { getHouseList } from '../../api/houselist'
-import { AutoSizer, List } from 'react-virtualized'
+import { AutoSizer, List, InfiniteLoader, WindowScroller } from 'react-virtualized'
 import HouseItem from '../../components/HouseItem'
+import Affix from '../../components/Affix'
 
 export default class HouseList extends Component {
   constructor() {
@@ -99,6 +100,28 @@ export default class HouseList extends Component {
     return <HouseItem key={key} style={style} {...data} />
   }
 
+  // 判断某一行是否加载完毕
+  isRowLoaded = ({ index }) => {
+    return !!this.state.houseList[index];
+  }
+
+  // 加载更多
+  loadMoreRows = ({ startIndex, stopIndex }) => {
+    console.log(startIndex, stopIndex);
+    return new Promise(async (resolve, reject) => {
+      const { data } = await getHouseList({ cityId: this.id, data: this.filter, start: startIndex + 1, end: stopIndex })
+
+      this.setState({
+        houseList: [...this.state.houseList, ...data.body.list],
+        count: data.body.count
+      }, () => {
+        resolve()
+      })
+
+    })
+  }
+
+
   render () {
     const { cityName, houseList, count } = this.state
     return (
@@ -109,16 +132,39 @@ export default class HouseList extends Component {
           <SearchBar className={styles.mySearchBar} cityName={cityName} />
         </Flex>
         {/* 赛选过滤组件 */}
-        <Filter onConditionChange={this.onConditionChange} />
+        <Affix>
+          <Filter onConditionChange={this.onConditionChange} />
+        </Affix>
         {houseList && (
           <AutoSizer>
-            {({ height, width }) => (<List
-              width={width}
-              height={height}
-              rowCount={count} // 如果是分页加载，必须是总条数
-              rowHeight={120}
-              rowRenderer={this.rowRenderer}
-            />)}
+            {({ width }) => (
+              <InfiniteLoader
+                isRowLoaded={this.isRowLoaded}
+                loadMoreRows={this.loadMoreRows}
+                rowCount={count}
+                minimumBatchSize={20}
+              >
+                {({ onRowsRendered, registerChild }) => (
+                  <WindowScroller>
+                    {({ height, isScrolling, onChildScroll, scrollTop }) => (
+                      <List
+                        autoHeight // 跟随window滚动的时候一定要加上
+                        width={width}
+                        height={height}
+                        isScrolling={isScrolling}
+                        onScroll={onChildScroll}
+                        scrollTop={scrollTop}
+                        onRowsRendered={onRowsRendered}
+                        ref={registerChild}
+                        rowCount={count} // 如果是分页加载，必须是总条数
+                        rowHeight={120}
+                        rowRenderer={this.rowRenderer}
+                      />
+                    )}
+                  </WindowScroller>
+                )}
+              </InfiniteLoader>
+            )}
           </AutoSizer>
         )}
       </div>
