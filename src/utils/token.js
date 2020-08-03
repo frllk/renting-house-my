@@ -18,3 +18,10 @@ export const setToken = token => {
 export const getToken = () => {
   return localStorage.getItem(KEY)
 }
+
+/**
+ * 删除token
+ */
+export const removeToken = () => {
+  localStorage.removeItem(KEY)
+}

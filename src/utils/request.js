@@ -2,7 +2,7 @@
  * 封装axios请求
  */
 import axios from 'axios'
-import { getToken } from './token'
+import { getToken, removeToken } from './token'
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_BASHURL,
@@ -19,6 +19,19 @@ instance.interceptors.request.use(
   },
   error => {
     return Promise.reject(error)
+  }
+)
+
+// 响应拦截器
+instance.interceptors.response.use(
+  response => {
+    if (response.data.status === 400) {
+      removeToken()
+    }
+    return response
+  },
+  err => {
+    return Promise.reject(err)
   }
 )
 export default instance 
