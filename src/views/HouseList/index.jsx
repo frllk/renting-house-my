@@ -20,6 +20,10 @@ export default class HouseList extends Component {
     })
   }
 
+  onConditionChange = data => {
+    console.log('data', data);
+  }
+
   render () {
     const { cityName } = this.state
     return (
@@ -30,7 +34,7 @@ export default class HouseList extends Component {
           <SearchBar className={styles.mySearchBar} cityName={cityName} />
         </Flex>
         {/* 赛选过滤组件 */}
-        <Filter />
+        <Filter onConditionChange={this.onConditionChange} />
       </div>
     )
   }

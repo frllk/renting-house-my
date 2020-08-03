@@ -8,6 +8,7 @@ import classNames from 'classnames'
 import { getHouseCondition } from '../../api/filter'
 import { getCurrentCity } from '../../utils/city'
 import FilterFooter from '../FilterFooter'
+import { Spring } from 'react-spring/renderprops'
 
 export default class Filter extends Component {
   constructor() {
@@ -34,6 +35,8 @@ export default class Filter extends Component {
         mode: ['null'],
         price: ['null'],
       },
+      // 为筛选服务的
+      tempMoreValue: [],
       // 点击或是打开的类型
       openType: '',
       houseCondition: null, // 房屋筛选条件
@@ -74,6 +77,8 @@ export default class Filter extends Component {
         tempObj['mode'] = selectedValue.mode.length > 0 && selectedValue.mode[0] !== 'null'
       } else if (item === 'price') {
         tempObj['price'] = selectedValue.price.length > 0 && selectedValue.price[0] !== 'null'
+      } else if (item === 'more') {
+        tempObj['more'] = selectedValue.more.length > 0
       }
     })
 
@@ -114,7 +119,7 @@ export default class Filter extends Component {
   // 点击设置选中状态
   clickType = type => {
     // console.log(type);
-    const { selectedTypeTitle, openType } = this.state
+    const { selectedTypeTitle } = this.state
     this.setState({
       selectedTypeTitle: {
         ...selectedTypeTitle,
@@ -133,6 +138,8 @@ export default class Filter extends Component {
     }, () => {
       this.setState({
         openType: ''
+      }, () => {
+        this.dealWithHighLight()
       })
     })
   }
@@ -141,8 +148,18 @@ export default class Filter extends Component {
   renderMsk = () => {
     const { openType } = this.state
     const isShow = openType === 'area' || openType === 'mode' || openType === 'price'
-    if (!isShow) return null
-    return <div onClick={this.cancelMask} className={styles.mask}></div>
+    /* if (!isShow) return null
+    return <div onClick={this.cancelMask} className={styles.mask}></div> */
+    return <Spring
+      config={{ duration: 250 }}
+      to={{ opacity: isShow ? 1 : 0 }}>
+      {props => {
+        if (props.opacity === 0) {
+          return null
+        }
+        return <div onClick={this.cancelMask} style={{ opacity: props.opacity }} className={styles.mask}></div>
+      }}
+    </Spring>
   }
 
   // PickerView(受控组件) 选中后的回调 
@@ -204,6 +221,9 @@ export default class Filter extends Component {
               }
             },
               () => {
+                // 把我们最终的值传递给父组件
+                this.props.onConditionChange(this.state.selectedValue)
+
                 this.setState({
                   openType: ''
                 })
@@ -220,7 +240,7 @@ export default class Filter extends Component {
   // 渲染MoreView
   renderMoreView = () => {
     // 户型、朝向、楼层、房屋亮点
-    const { houseCondition: { roomType, oriented, floor, characteristic } } = this.state
+    const { houseCondition: { roomType, oriented, floor, characteristic }, tempMoreValue, selectedValue } = this.state
     return (
       <div className={styles.filterMore}>
         <div className={styles.filterMoreMask} onClick={() => this.cancelMask()}></div>
@@ -231,6 +251,22 @@ export default class Filter extends Component {
             {this.renderEveryItem('楼层', floor)}
             {this.renderEveryItem('房屋亮点', characteristic)}
           </dl>
+          <FilterFooter className={styles.filterMoreFooter}
+            onCancel={() => this.setState({ tempMoreValue: [] })}
+            onOk={() => {
+              this.setState({
+                selectedValue: { ...selectedValue, more: tempMoreValue }
+              }, () => {
+                this.setState({
+                  openType: ''
+                }, () => {
+                  this.dealWithHighLight()
+                  // 把我们最终的值传递给父组件
+                  this.props.onConditionChange(this.state.selectedValue)
+                })
+              })
+            }}
+            cancelText="清除" />
         </div>
       </div>
     )
@@ -238,18 +274,34 @@ export default class Filter extends Component {
 
   // 渲染MoreView中每一项内容 => 户型、朝向、楼层、房屋亮点
   renderEveryItem = (title, data) => {
+    const { tempMoreValue } = this.state
     return (
       <>
         <dt className={styles.dt}>{title}</dt>
         <dd className={styles.dd}>
           {
-            data.map(item => <span key={item.value} className={styles.tag}>{item.label}</span>)
+            data.map(item => <span key={item.value} onClick={() => this.toggleSelect(item.value)} className={classNames(styles.tag, { [styles.tagActive]: tempMoreValue.includes(item.value) })}>{item.label}</span>)
           }
         </dd>
-
       </>
     )
   }
+
+  // 点击切换设置高亮状态
+  toggleSelect = value => {
+    let oldTempMoreValue = this.state.tempMoreValue
+    if (oldTempMoreValue.includes(value)) {
+      // 之前有
+      oldTempMoreValue = oldTempMoreValue.filter(item => item !== value)
+    } else {
+      // 之前没有
+      oldTempMoreValue.push(value)
+    }
+    this.setState({
+      tempMoreValue: oldTempMoreValue
+    })
+  }
+
 
   render () {
     const { houseCondition, openType } = this.state
