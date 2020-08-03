@@ -3,6 +3,7 @@ import styles from './index.module.scss'
 import { Flex } from 'antd-mobile'
 import SearchBar from '../../components/SearchBar'
 import { getCurrentCity } from '../../utils/city'
+import Filter from '../../components/Filter'
 
 
 export default class HouseList extends Component {
@@ -13,8 +14,7 @@ export default class HouseList extends Component {
     }
   }
   async componentDidMount () {
-    const { value, label } = await getCurrentCity()
-    console.log(value, label);
+    const { label } = await getCurrentCity()
     this.setState({
       cityName: label
     })
@@ -29,6 +29,8 @@ export default class HouseList extends Component {
           {/* className:这里是传值  SearchBar组件内部进行处理 */}
           <SearchBar className={styles.mySearchBar} cityName={cityName} />
         </Flex>
+        {/* 赛选过滤组件 */}
+        <Filter />
       </div>
     )
   }
