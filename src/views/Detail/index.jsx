@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import styles from './index.module.scss'
-import { Carousel, Flex, Modal } from 'antd-mobile'
+import { Carousel, Flex, Modal, Toast } from 'antd-mobile'
 import MyNavBar from '../../components/MyNavBar'
-import { getHouseInfo } from '../../api/detail'
+import { getHouseInfo, getHouseFavorite, addFavorite, deleteFavorite } from '../../api/detail'
 import classNames from 'classnames'
 import HouseMatch from '../../components/HouseMatch'
 import HouseItem from '../../components/HouseItem'
@@ -69,12 +69,13 @@ export default class Detail extends Component {
   // 组件创建时
   componentDidMount () {
     this.getHouseInfoData()
+    this.getHouseFavorite()
   }
 
   // 获取房屋信息
   getHouseInfoData = async () => {
     const { data } = await getHouseInfo(this.props.match.params.id)
-    console.log(data)
+    // console.log(data)
     this.setState({
       navTitle: data.body.community,
       houseInfo: data.body
@@ -83,6 +84,17 @@ export default class Detail extends Component {
         this.initMap()
       }, 200);
     })
+  }
+
+  // 获取收藏状态
+  getHouseFavorite = async () => {
+    const { data } = await getHouseFavorite(this.props.match.params.id)
+    // console.log('Favorite', data);
+    if (data.status === 200) {
+      this.setState({
+        isFavorite: data.body.isFavorite
+      })
+    }
   }
 
   // 渲染轮播图
@@ -293,7 +305,7 @@ export default class Detail extends Component {
     )
   }
   // 收藏&取消收藏
-  favoriteOrNot = () => {
+  favoriteOrNot = async () => {
     // 1. 判断是否登录，如果没有登录，则提示，然后根据用户的选择进行处理
     const token = getToken()
     if (!token) {
@@ -303,7 +315,23 @@ export default class Detail extends Component {
       ]);
       return
     }
+    if (this.state.isFavorite) {
+      // 已收藏 ===>  取消收藏
+      const { data } = await deleteFavorite(this.props.match.params.id)
+      Toast.info(data.description, 1)
+      this.setState({
+        isFavorite: false
+      })
+    } else {
+      // 未收藏 ===>  收藏
+      const { data } = await addFavorite(this.props.match.params.id)
+      Toast.info(data.description, 1)
+      this.setState({
+        isFavorite: true
+      })
+    }
   }
+
   render () {
     const { navTitle, houseInfo } = this.state
     return (

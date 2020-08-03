@@ -58,7 +58,7 @@ const HOUSE_PACKAGE = [
 export default class HouseMatch extends Component {
   constructor(props) {
     super()
-    console.log(props);
+    // console.log(props);
 
     let packages = null
     if (props.data) {

@@ -13,3 +13,29 @@ export const getHouseInfo = id => {
     url: `/houses/${id}`
   })
 }
+
+/**
+ * 获取是否收藏状态
+ * @param {*} id id
+ */
+export const getHouseFavorite = id => request({
+  url: `user/favorites/${id}`
+})
+
+/**
+ * 添加收藏
+ * @param {*} id id
+ */
+export const addFavorite = id => request({
+  url: `user/favorites/${id}`,
+  method: 'POST'
+})
+
+/**
+ * 取消收藏
+ * @param {*} id id
+ */
+export const deleteFavorite = id => request({
+  url: `user/favorites/${id}`,
+  method: 'DELETE'
+})
