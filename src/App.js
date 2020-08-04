@@ -9,6 +9,8 @@ import NotFound from './views/404'
 import CityList from './views/CityList'
 import Map from './views/Map'
 import Detail from './views/Detail'
+import Rent from './views/Rent';
+import { isAuth } from './utils/token'
 
 function App () {
   return (
@@ -20,7 +22,16 @@ function App () {
           <Route path='/citylist' component={CityList} />
           <Route path='/map' component={Map} />
           {/* :id ===> vue中叫：动态路径参数 */}
-          <Route path='/Detail/:id' component={Detail} />
+          <Route path='/detail/:id' component={Detail} />
+          {/* 这样写没有进行任何的权限控制 */}
+          {/* <Route path='/rent' component={Rent} /> */}
+          <Route path='/rent' render={props => {
+            if (isAuth()) { // 有权限
+              return <Rent />
+            } else { // 没权限
+              return <Redirect to={{ pathname: '/login', state: { from: '/rent' } }} />
+            }
+          }} />
           <Redirect from='/' to='/layout' exact component={Layout} />
           <Route component={NotFound} />
         </Switch>

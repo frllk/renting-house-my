@@ -31,7 +31,12 @@ class Login extends Component {
     // 1.保存到本地
     setToken(data.body.token)
     // 2.返回上个页面
-    this.props.history.goBack(-1)
+    const { location, history } = this.props
+    if (location.state && location.state.from) {
+      history.push(location.state.from)
+    } else {
+      history.goBack(-1)
+    }
   }
 
   render () {

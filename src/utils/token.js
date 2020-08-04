@@ -25,3 +25,10 @@ export const getToken = () => {
 export const removeToken = () => {
   localStorage.removeItem(KEY)
 }
+
+/**
+ * 判断是否登录了
+ */
+export const isAuth = () => {
+  return getToken() ? true : false
+}
