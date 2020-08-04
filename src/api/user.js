@@ -15,3 +15,18 @@ export const login = data => {
     data
   })
 }
+
+/**
+ * 获取用户信息
+ */
+export const getUserInfo = () => request({
+  url: 'user'
+})
+
+/**
+ * 用户退出
+ */
+export const userLogout = () => request({
+  url: 'user/logout',
+  method: 'POST'
+})

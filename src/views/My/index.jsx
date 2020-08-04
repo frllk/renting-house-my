@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import styles from './index.module.scss'
-import { Button, Grid } from 'antd-mobile'
+import { Button, Grid, Modal } from 'antd-mobile'
 import { Link } from 'react-router-dom'
-
+import { getUserInfo, userLogout } from '../../api/user'
+import { removeToken } from '../../utils/token'
 
 
 // 菜单数据
@@ -29,6 +30,39 @@ export default class My extends Component {
       nickname: '游客',
     }
   }
+
+  async componentDidMount () {
+    const { data } = await getUserInfo()
+    console.log('getUserInfo', data)
+    if (data.status === 200) {
+      this.setState({
+        isLogin: true,
+        nickname: data.body.nickname,
+        avatar: data.body.avatar
+      })
+    }
+  }
+
+  userLoginOut = () => {
+    Modal.alert('提示', '确定要退出吗?', [
+      { text: '取消', onPress: () => null },
+      {
+        text: '确定', onPress: async () => {
+          const { data } = await userLogout()
+          // console.log('userLogout', data)
+          // 清除token
+          removeToken()
+          // 修改登录状态和头像 昵称为默认值
+          this.setState({
+            isLogin: false,
+            avatar: '/img/profile/avatar.png',
+            nickname: '游客'
+          })
+        }
+      },
+    ])
+  }
+
   render () {
     const { avatar, isLogin, nickname } = this.state
     return (
@@ -42,7 +76,7 @@ export default class My extends Component {
             <div className={styles.user}>
               <div className={styles.name}>{nickname}</div>
               {
-                isLogin && <div className={styles.auth}><span>退出</span></div>
+                isLogin && <div className={styles.auth}><span onClick={() => this.userLoginOut()}>退出</span></div>
               }
 
               <div className={styles.edit}>
