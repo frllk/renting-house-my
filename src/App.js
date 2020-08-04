@@ -11,6 +11,8 @@ import Map from './views/Map'
 import Detail from './views/Detail'
 import Rent from './views/Rent';
 import { isAuth } from './utils/token'
+import RentAdd from './views/Rent/Add'
+import AuthRoute from './components/AuthRoute'
 
 function App () {
   return (
@@ -25,14 +27,42 @@ function App () {
           <Route path='/detail/:id' component={Detail} />
           {/* 这样写没有进行任何的权限控制 */}
           {/* <Route path='/rent' component={Rent} /> */}
-          <Route path='/rent' render={props => {
+          {/*  <Route exact path='/rent/add' render={props => {
+            // console.log('render', props)
             if (isAuth()) { // 有权限
-              return <Rent />
+              return <Rent {...props} />
             } else { // 没权限
-              return <Redirect to={{ pathname: '/login', state: { from: '/rent' } }} />
+              return <Redirect to={{ pathname: '/login', state: { from: props.location.pathname } }} />
             }
           }} />
-          <Redirect from='/' to='/layout' exact component={Layout} />
+
+          <Route exact path='/rent/add' render={props => {
+            // console.log('render', props)
+            if (isAuth()) { // 有权限
+              return <RentAdd {...props} />
+            } else { // 没权限
+              return <Redirect to={{ pathname: '/login', state: { from: props.location.pathname } }} />
+            }
+          }} /> */}
+          {/* <Route path='/rent' render={props => {
+            // console.log('render', props)
+            if (isAuth()) { // 有权限
+              return <Rent {...props} />
+            } else { // 没权限
+              return <Redirect to={{ pathname: '/login', state: { from: props.location.pathname } }} />
+            }
+          }} /> */}
+          {/* 权限控制的写法 */}
+          {/* <AuthRoute exact path='/rent' component={Rent} /> */}
+          <AuthRoute exact path='/rent'>
+            <Rent />
+          </AuthRoute>
+          <AuthRoute path='/rent/add'>
+            <RentAdd />
+          </AuthRoute>
+          {/* <AuthRoute path='/rent' component={Rent} />
+          <AuthRoute path='/rent/add' component={RentAdd} />
+          <Redirect from='/' to='/layout' exact component={Layout} /> */}
           <Route component={NotFound} />
         </Switch>
       </Router>

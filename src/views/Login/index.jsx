@@ -9,8 +9,8 @@ class Login extends Component {
   constructor() {
     super()
     this.state = {
-      username: '',
-      password: ''
+      username: 'test2',
+      password: 'test2'
     }
   }
 
@@ -33,7 +33,10 @@ class Login extends Component {
     // 2.返回上个页面
     const { location, history } = this.props
     if (location.state && location.state.from) {
-      history.push(location.state.from)
+      // [my login rent]
+      // history.push(location.state.from)
+      // [my rent]
+      history.replace(location.state.from)
     } else {
       history.goBack(-1)
     }

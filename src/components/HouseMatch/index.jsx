@@ -56,6 +56,9 @@ const HOUSE_PACKAGE = [
 ]
 
 export default class HouseMatch extends Component {
+  static defaultProps = {
+    readonly: true
+  }
   constructor(props) {
     super()
     // console.log(props);
@@ -67,16 +70,33 @@ export default class HouseMatch extends Component {
       packages = HOUSE_PACKAGE
     }
     this.state = {
-      packages
+      packages,
+      selectedList: []
     }
   }
 
+  toggleSelect = name => {
+    if (this.props.readonly) return
+    console.log(name)
+    let oldList = this.state.selectedList
+    if (oldList.includes(name)) {// 之前存在
+      oldList = oldList.filter(item => item !== name)
+    } else {
+      // 之前不存在
+      oldList.push(name)
+    }
+    this.setState({
+      selectedList: oldList
+    }, () => {
+      this.props.onChange && this.props.onChange(this.state.selectedList.join('|'))
+    })
+  }
   render () {
-    const { packages } = this.state
+    const { packages, selectedList } = this.state
     return (
       <ul className={styles.root}>
         {
-          packages.map(item => <li key={item.id} className={styles.item}>
+          packages.map(item => <li key={item.id} className={classNames(styles.item, { [styles.active]: selectedList.includes(item.name) })} onClick={() => this.toggleSelect(item.name)}>
             <p><i className={classNames(`iconfont ${item.icon}`, styles.icon)} /></p>
             {item.name}
           </li>)

@@ -10,7 +10,7 @@ function MyNavBar ({ children, rightContent, className, history }) {
       className={classNames(styles.navBar, className)}
       icon={<i className="iconfont icon-back"></i>}
       onLeftClick={() => {
-        console.log(1);
+        // console.log(1);
         history.goBack()
       }}
       rightContent={rightContent}
