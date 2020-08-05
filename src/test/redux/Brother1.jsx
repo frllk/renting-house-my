@@ -60,14 +60,13 @@ export default class Brother1 extends Component {
             &nbsp;&nbsp;
           <Button onClick={this.addCountAsync} size="small" type="primary">async +</Button>
             &nbsp;&nbsp;
-          <Button onClick={this.minusCountAsync} size="small" type="primary">-</Button>
+          <Button onClick={this.minusCount} size="small" type="primary">-</Button>
             &nbsp;&nbsp;
-          <Button onClick={this.minusCount} size="small" type="primary">async -</Button>
+          <Button onClick={this.minusCountAsync} size="small" type="primary">async -</Button>
         </Flex>
         <br />
         <Flex>
           <input type="text" value={name} onChange={(e) => {
-            console.log(e.target.value)
             this.setState({
               name: e.target.value
             })

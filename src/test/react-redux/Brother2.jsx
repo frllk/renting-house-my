@@ -1,34 +1,17 @@
 import React, { Component } from 'react'
-import store from '../store'
+import { connect } from 'react-redux'
 
 
-export default class Brother2 extends Component {
-  constructor() {
-    super()
-    // 构造器只执行一次  需要手动订阅更新
-    this.state = {
-      count: store.getState().count,
-      userName: store.getState().user
-    }
+const mapStateToProps = (state) => {
+  return {
+    count: state.count,
+    userName: state.user
   }
-  componentDidMount () {
-    // 手动订阅更新
-    this.unsubscribe = store.subscribe(() => {
-      // console.log('--------------', store.getState())
-      this.setState({
-        count: store.getState().count,
-        userName: store.getState().user
-      })
-    })
-  }
+}
 
-  componentWillUnmount () {
-    if (this.unsubscribe)
-      this.unsubscribe()
-  }
-
+class Brother2 extends Component {
   render () {
-    const { count, userName } = this.state
+    const { count, userName } = this.props
     return (
       <div>
         Brother2
@@ -40,3 +23,4 @@ export default class Brother2 extends Component {
     )
   }
 }
+export default connect(mapStateToProps, null)(Brother2)

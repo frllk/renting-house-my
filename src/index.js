@@ -4,10 +4,15 @@ import './index.css';
 import App from './App'; // 根组件 Vue: App.vue
 import * as serviceWorker from './serviceWorker';
 import 'react-virtualized/styles.css'; // 导入虚拟化长列表的样式
+import { Provider } from 'react-redux'
+import store from './test/store'
 
 ReactDOM.render(
   // <React.StrictMode>
-  <App />,
+  <Provider store={store}>
+    <App />
+  </Provider>
+  ,
   // </React.StrictMode>,
   document.getElementById('root')
 );
