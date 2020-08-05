@@ -18,7 +18,6 @@ class Brother2 extends Component {
         <br />
         <br />
         仓库中的新值---{count}---{userName}
-        <p>todo：</p>
       </div>
     )
   }

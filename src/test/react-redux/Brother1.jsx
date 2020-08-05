@@ -71,7 +71,6 @@ class Brother1 extends Component {
         <br />
         <Flex>
           <input type="text" value={name} onChange={(e) => {
-            console.log(e.target.value)
             this.setState({
               name: e.target.value
             })
