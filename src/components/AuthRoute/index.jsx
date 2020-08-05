@@ -6,7 +6,7 @@
 
 import React from 'react'
 import { isAuth } from '../../utils/token'
-import { Route, Switch, Redirect } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 
 /* function AuthRoute ({ component: Comp, ...rest }) {
   return (
