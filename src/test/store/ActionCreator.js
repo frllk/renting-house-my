@@ -78,16 +78,18 @@ export const toggleTodo = index => {
 /**
  * user
  */
-
+// 同步返回对象
 export const setName = text => {
   return {
     type: SETNAME,
     text
   }
 }
+// 异步返回函数
 export const asyncSetName = text => {
   return dispatch => {
     setTimeout(() => {
+      // 触发同步操作
       dispatch(setName(text))
     }, 1000);
   }

@@ -8,7 +8,7 @@ import React from 'react'
 import { isAuth } from '../../utils/token'
 import { Route, Redirect } from 'react-router-dom'
 
-/* function AuthRoute ({ component: Comp, ...rest }) {
+function AuthRoute ({ component: Comp, ...rest }) {
   return (
     <>
       <Route
@@ -25,8 +25,9 @@ import { Route, Redirect } from 'react-router-dom'
         }} />
     </>
   )
-} */
-function AuthRoute ({ children, ...rest }) {
+}
+// 这种方式props无法传递 => 可以在子组件用withRouter
+/* function AuthRoute ({ children, ...rest }) {
   return (
     <>
       <Route
@@ -38,5 +39,5 @@ function AuthRoute ({ children, ...rest }) {
         } />
     </>
   )
-}
+} */
 export default AuthRoute

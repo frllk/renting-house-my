@@ -13,8 +13,9 @@ import Rent from './views/Rent';
 import { isAuth } from './utils/token'
 import RentAdd from './views/Rent/Add'
 import AuthRoute from './components/AuthRoute'
-import ReduxIndex from './test/redux';
-import ReactReduxIndex from './test/react-redux'
+// import ReduxIndex from './test/redux';
+// import ReactReduxIndex from './test/react-redux'
+import RentSearch from './views/Rent/search';
 
 function App () {
   return (
@@ -27,8 +28,8 @@ function App () {
           <Route path='/map' component={Map} />
           {/* :id ===> vue中叫：动态路径参数 */}
           <Route path='/detail/:id' component={Detail} />
-          <Route path='/redux' component={ReduxIndex} />
-          <Route path='/react-redux' component={ReactReduxIndex} />
+          {/* <Route path='/redux' component={ReduxIndex} />
+          <Route path='/react-redux' component={ReactReduxIndex} /> */}
           {/* 这样写没有进行任何的权限控制 */}
           {/* <Route path='/rent' component={Rent} /> */}
           {/*  <Route exact path='/rent/add' render={props => {
@@ -57,18 +58,23 @@ function App () {
             }
           }} /> */}
           {/* 权限控制的写法 */}
-          {/* <AuthRoute exact path='/rent' component={Rent} /> */}
-          <AuthRoute exact path='/rent'>
+          {/* {<AuthRoute exact path='/rent' component={Rent} />} */}
+          {/* <AuthRoute exact path='/rent'>
             <Rent />
           </AuthRoute>
           <AuthRoute path='/rent/add'>
             <RentAdd />
           </AuthRoute>
-          {/* <AuthRoute path='/rent' component={Rent} />
+          <AuthRoute path='/rent/search'>
+            <RentSearch />
+          </AuthRoute> */}
+          <AuthRoute exact path='/rent' component={Rent} />
           <AuthRoute path='/rent/add' component={RentAdd} />
-          <Redirect from='/' to='/layout' exact component={Layout} /> */}
-          <Route to='/redux' component={ReduxIndex} />
-          <Route to='/react-redux' component={ReactReduxIndex} />
+          <AuthRoute path='/rent/search' component={RentSearch} />
+
+          <Redirect from='/' to='/layout' exact component={Layout} />
+          {/* <Route to='/redux' component={ReduxIndex} />
+          <Route to='/react-redux' component={ReactReduxIndex} /> */}
           <Route component={NotFound} />
         </Switch>
       </Router>
