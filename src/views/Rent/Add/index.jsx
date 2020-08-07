@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import MyNavBar from '../../../components/MyNavBar'
-import { List, ImagePicker, InputItem, Picker, TextareaItem, Flex } from 'antd-mobile';
+import { List, ImagePicker, InputItem, Picker, TextareaItem, Flex, Toast, Modal } from 'antd-mobile';
 import styles from './index.module.scss'
 import HouseMatch from '../../../components/HouseMatch'
 import { connect } from 'react-redux'
-
+import { uploadImage, publishHouse } from '../../../api/rent'
 
 // 房屋类型
 const roomTypeData = [
@@ -45,6 +45,7 @@ export default connect(
     constructor(props) {
       super(props)
       this.state = {
+        community: this.props.community ?? '',
         files: [], // 放的就是我们选择的图片
         title: '', // 标题
         description: '', // 描述
@@ -76,6 +77,77 @@ export default connect(
         supporting: data
       })
     }
+
+    // 取消
+    cancel = () => {
+      Modal.alert('提示', '放弃发布房源?', [
+        { text: '放弃', onPress: () => this.props.history.goBack() },
+        { text: '继续编辑', onPress: () => null },
+      ]);
+    }
+
+    // 提交
+    submit = async () => {
+      // community, // 小区名称  files, // 放的就是我们选择的   title, // 标题   description, // 描述  oriented, // 朝向  supporting, // 房屋配置套 price, // 租金 roomType, // 房屋的类型  size, // 建筑面积 floor // 楼层} 
+      const { community, files, title, price, size, roomType, supporting, floor, oriented, description } = this.state
+
+      if (!community) {
+        Toast.info('小区名称不能为空', 1.5)
+        return
+      }
+      if (!files) {
+        Toast.info('房屋图片不能为空', 1.5)
+        return
+      }
+      if (!title) {
+        Toast.info('房屋标题不能为空', 1.5)
+        return
+      }
+      if (!price) {
+        Toast.info('房屋价格不能为空', 1.5)
+        return
+      }
+      if (!size) {
+        Toast.info('建筑面级不能为空', 1.5)
+        return
+      }
+      if (!roomType) {
+        Toast.info('房屋类型不能为空', 1.5)
+        return
+      }
+      if (!supporting) {
+        Toast.info('房屋配套不能为空', 1.5)
+        return
+      }
+      if (!floor) {
+        Toast.info('房屋楼层不能为空', 1.5)
+        return
+      }
+      if (!oriented) {
+        Toast.info('房屋朝向不能为空', 1.5)
+        return
+      }
+      if (!description) {
+        Toast.info('房屋描述不能为空', 1.5)
+        return
+      }
+
+      // 先做上传文件
+      const { data } = await uploadImage(files)
+      console.log(data)
+
+      if (data.status === 200) {
+        // 在做发布房源
+        const requestData = { community, title, price, size, roomType, supporting, floor, oriented, description, houseImg: data.body.join('|') }
+        const res2 = await publishHouse(requestData)
+        if (res2.data.status === 200) {
+          Toast.info('发布房源成功~', 1.5, () => this.props.history.replace('/rent'))
+        } else {
+          Toast.info('服务器异常', 1.5)
+        }
+      }
+    }
+
 
     render () {
       const { files, title, price, size, roomType, floor, oriented, description } = this.state
@@ -133,10 +205,10 @@ export default connect(
           </List>
           <Flex className={styles.bottom}>
             <Flex.Item>
-              <div className={styles.cancel}>取消</div>
+              <div className={styles.cancel} onClick={this.cancel}>取消</div>
             </Flex.Item>
             <Flex.Item>
-              <div className={styles.confirm}>提交</div>
+              <div className={styles.confirm} onClick={this.submit}>提交</div>
             </Flex.Item>
           </Flex>
         </div>
