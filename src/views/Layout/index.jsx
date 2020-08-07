@@ -1,12 +1,20 @@
 import React, { Component } from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
-import Home from '../Home'
+import Styles from './index.module.scss'
+import { TabBar } from 'antd-mobile';
+
+// 导入子组件
+/* import Home from '../Home'
 import HouseList from '../HouseList'
 import News from '../News'
 import My from '../My'
-import NotFound from '../404'
-import Styles from './index.module.scss'
-import { TabBar } from 'antd-mobile';
+import NotFound from '../404' */
+
+const Home = React.lazy(() => import('../Home'))
+const HouseList = React.lazy(() => import('../HouseList'))
+const News = React.lazy(() => import('../News'))
+const My = React.lazy(() => import('../My'))
+const NotFound = React.lazy(() => import('../404'))
 
 class Login extends Component {
   constructor(props) {
